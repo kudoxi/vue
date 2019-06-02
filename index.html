@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <style>
+        。uitem{
+            color:red;
+        }
+        </style>
+    </head>
+    <body>
+        1.注册关联节点el：app
+        2.v-model 在data里注册属性名：info
+        3.@click 在methods里注册事件：handleClick
+        4.v-for 定义循环数组，数组在data里注册，在事件里操作，返回给标签以{{}}显示
+        5.在全局作用域定义标签
+
+        @click事件
+        <div id="app">{{msg}}
+            <div class="myclass">
+                <input type="text" v-model="info">
+                <button @click="handleClick">添加</button>
+            </div>
+            <ul>
+                <!-- <li v-for="item in list_test">{{item}}</li> -->
+                把item_test传给标签里的item属性，item属性再传给li
+                <todo-item v-for="item_test in list_test"  :item="item_test"></todo-item>
+            </ul>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+        <script>
+            //自定义标签
+            Vue.component('todo-item',{
+                props:['item'],
+                template:'<li class="uitem">{{item}}</li>'
+            })
+            new Vue({
+                el:'#app',
+                data(){
+                    return {
+                        msg :'hello kudoxi',
+                        info:'',
+                        list_test:[],
+                    }
+                },
+                methods:{
+                    handleClick(){
+                        //this 指向app节点
+                        //console.log(this.info)
+                        this.list_test.push(this.info)
+                        this.info = '' //清空input
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>

@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <script src="lib/vue.js"></script>
+        <style>
+        [v-cloak]{
+            display: none;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <!-- 1 浏览器加载数据时，有时候慢，会让用户看到插值表达式{{msg}}，然后闪烁渲染成正常数据123,我们需要防止用户看到插值表达式，所以在加载时，对其进行隐藏
+            v-cloak解决插值表达式，闪烁问题 -->
+            <p v-cloak>+++++++{{msg}}-------</p>
+
+            <!-- 2 v-text可以渲染出数据，并且没有闪烁问题；但是v-text不能在标签内添加额外字符，它会用数据直接替换掉标签内原有内容 -->
+            <h4 v-text="msg"></h4>
+
+            <!-- 3 v-html 可以把字符串格式的标签输出到页面，并渲染出来 -->
+            <div v-html="msg2"></div>
+            <div>
+                <!-- 4 v-bind:xxx="变量属性名" 告诉xxx,引号内的是一个变量;并且，v-bind会认为引号内的是js表达式，这里mytitle作为js变量，可以拼接字符串123
+                     v-bind:xxx可以简写为:xxx -->
+                <input type="button" value="按钮" v-bind:title="mytitle + '123'">
+            </div>
+            <div>
+                <!-- 5 v-on事件绑定机制 
+                    缩写是一个@ -->
+                <input type="button" value="按钮2" v-on:click="show">
+            </div>
+        </div>
+        <script>
+        var vm = new Vue({
+            el:'#app',
+            data:{
+                msg:'123',
+                msg2:'<h1>哈哈，我是一个大大的H1</h1>',
+                mytitle:'自定义title'
+            },
+            methods:{//定义当前实例VUE中所有可用方法
+                show:function(){
+                    alert("hello world")
+                },
+            }
+        })
+        </script>
+    </body>
+</html>

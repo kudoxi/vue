@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <script src="lib/vue.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <button @click="lang">浪起来</button>
+            <button @click="wen">稳住</button>
+            <!-- <h4>{{msg}}</h4> -->
+            <p v-text="msg"></p>
+            <p v-text="msg2"></p>
+        </div>
+    </body>
+    <script>
+    var vm = new Vue({
+        el:"#app",
+        data:{
+            msg:"",
+            msg2:"",
+            time:null,
+        },
+        methods:{
+            lang:function(){
+                this.msg2 = '';
+                this.msg = "猥琐发育，别浪！";
+                clearInterval(this.time);
+                var my = this;
+                this.time = setInterval(function(){
+                    console.log(my.msg)
+                    var start = my.msg.substring(0,1);
+                    var end = my.msg.substring(1);
+                    
+                    my.msg = end + start;
+                },1000);
+            },
+            wen:function(){
+                this.msg = '';
+                this.msg2 = '稳住，我们能赢！';
+                clearInterval(this.time);
+                var my = this;
+                this.time = setInterval(function(){
+                    console.log(my.msg2)
+                    var start = my.msg2.substring(0,1);
+                    var end = my.msg2.substring(1);
+                    
+                    my.msg2 = end + start;
+                },1000);
+                //
+            }
+        }
+    })
+    </script>
+</html>

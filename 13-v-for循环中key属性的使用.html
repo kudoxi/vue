@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div>
+            <label>
+                ID:
+                <input type="text"  v-model="vid">
+            </label>
+            <label>
+                姓名:
+                <input type="text"  v-model="vname">
+            </label>
+            <button @click="add">添加</button>
+        </div>
+
+        <!-- 把item的唯一值绑定给key,防止在对元素进行dom进行首位置insert操作后，新添加的1号位顶替和占有原1号位属性
+        注意v-for循环中，key属性必须用v-bind绑定制定的值，并且只能使用number/string -->
+        <p v-for="item in list" v-bind:key="item.id">
+            <!-- 比如本案例中，不加key的情况下，原先选中了韩非子，在点击按钮添加后，变成了选中赵高 -->
+            <input type="checkbox" name="" id="">
+            {{item.id}} --- {{item.name}}
+        </p>
+    </div>
+    <script>
+        var vm=new Vue({
+           el:'#app',
+           data:{
+               vid:'',
+               vname:'',
+               list:[
+                   {id:1,name:'李斯'},
+                   {id:2,name:'嬴政'},
+                   {id:3,name:'赵高'},
+                   {id:4,name:'韩非'},
+                   {id:5,name:'荀子'}
+               ]
+           },
+           methods:{
+            add(){
+                this.list.unshift({id:this.vid,name:this.vname})
+            }
+           }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+    <style>
+        .inner{
+            height: 150px;
+            background-color: darkcyan;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="inner" @click="divHandler">
+            <!-- 使用.stop 阻止冒泡 -->
+            <button @click.stop="btnHandler">点击</button>
+        </div>
+        <p>
+            <!-- 阻止默认行为 ， 使得a标签不跳转，form表单不会提交 -->
+            <a href="http://www.baidu.com" @click.prevent="aHandler">百度</a>
+        </p>
+
+        <!-- 使用.capture 触发捕获型事件，点击内部元素，从外部元素开始向内依次执行 -->
+        <div class="inner" @click.capture="divHandler">
+            <button @click="btnHandler">点击</button>
+        </div>
+
+        <!-- 只在点击自己的时候触发，其他任何冒泡和捕获事件都不会触发 -->
+        <div class="inner" @click.self="divHandler">
+            <button @click="btnHandler">点击</button>
+        </div>
+
+        <p>
+            <!-- once 只触发一次事件处理函数，再点就恢复了默认事件，调换顺序也是一样 -->
+            <a href="http://www.baidu.com" @click.prevent.once="aHandler">百度</a>
+            <a href="http://www.baidu.com" @click.once.prevent="aHandler">百度</a>
+        </p>
+    </div>
+    <script>
+        var vm=new Vue({
+           el:'#app',
+           data:{},
+           methods:{
+               divHandler:function(){
+                    console.log('DIV')
+               },
+               btnHandler:function(){
+                    console.log('btn')
+               },
+               aHandler:function(){
+                   console.log('a')
+               }
+           }
+        });
+    </script>
+</body>
+
+</html>

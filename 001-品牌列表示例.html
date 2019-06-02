@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+     <link  rel="stylesheet"  href="lib/bootstrap.min.css" />
+</head>
+
+<body>
+    <div id="app">
+
+        <div class="panel panel-primary">
+              <div class="panel-heading">
+                    <h3 class="panel-title">添加品牌</h3>
+              </div>
+              <div class="panel-body form-inline">
+                  <label for="">
+                        ID:
+                        <input type="text" class="form-control" v-model="id">
+                  </label>
+                  <label for="">
+                        Name:
+                        <!-- 键盘修饰符enter：点击键盘的enter键之后触发 -->
+                        <input type="text" class="form-control" v-model="name" @keyup.enter="add">
+                        <!-- 其他还有的键盘修饰符tab，delete,esc,space,up,down,left,right -->
+                        <!-- 如果想自定义键盘按键事件，如，点击f2触发事件，找到f2的键盘码113，事件绑定@keyup.113="add" 即可 -->
+                        <!-- 也可以在js里自定义键盘码别名,定义后，@keyup.f2="add" -->
+                    </label>
+                    
+                    <input type="button" value="添加" class="btn btn-primary" @click="add"> 
+
+                    <label for="">
+                            搜索关键字:
+                            <input type="text" class="form-control" v-model="keywords">
+                    </label>
+                    
+              </div>
+        </div>
+        
+        
+        
+        <table class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Ctime</th>
+                    <th>Option</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 之前v-for中的数据，都是从data里的list渲染出来的 -->
+                <!-- <tr v-for="item in list" :key="item.id"> -->
+                <!-- 现在我们自定义个search方法，同时，把所有的关键字，通过传参方式，传递给search
+                在search内部，通过执行for循环，把所有符合关键字的数据，保存到新数组中
+                返回新数组 -->
+                <tr v-for="item in search(keywords)" :key="item.id">
+                    <td>{{ item.id }}</td>
+                    <td v-text="item.name"></td>
+                    <td>{{item.ctime | dateFormat('')}}</td>
+                    <td>
+                        <!-- 事件绑定机制，如果加了小括号，如del(id)，就可以给del方法传参 -->
+                        <a href="" @click.prevent="del(item.id)">删除</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </div>
+    <div id="app2">
+        <h3>{{ dt | dateFormat }}</h3>
+    </div>
+    <script>
+        //数组新方法：
+        //都可以进行数组元素遍历
+        //1.forEach:遍历
+        //2.some：遍历，满足条件return true可中止
+        //3.filter：过滤，可以把查询结果放入新数组
+        //4.findIndex： 找对应索引
+
+        //全局时间格式化过滤器--所有VM实例都可以公用
+        Vue.filter('dateFormat',function(dateStr,pattern=''){
+            //根据给定时间字符串，给出特定格式时间
+            var dt = new Date(dateStr);
+
+            //yyyy-mm-dd
+            var y = dt.getFullYear();
+            var m = dt.getMonth() + 1;
+            var d = dt.getDate();
+
+            //传入格式转小写
+            if(pattern.toLowerCase() == 'yyyy-mm-dd'){
+                return `${y}-${m}-${d}`;
+            }else{
+                var hh = dt.getHours();
+                var mm = dt.getMinutes();
+                var ss = dt.getSeconds();
+
+                return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+            }
+        })
+
+        //自定义全局按键修饰符
+        Vue.config.keyCodes.f2 = 113;
+
+
+        var vm=new Vue({
+           el:'#app',
+           data:{
+               list:[
+                   {'id':1,'name':'奔驰','ctime':new Date()},
+                   {'id':2,'name':'宝马','ctime':new Date()},
+               ],
+               id:'',
+               name:'',
+               keywords:'',
+
+           },
+           methods:{
+               add(){
+                    this.list.push({'id':this.id,'name':this.name,'ctime':new Date()});
+                    this.id = "";
+                    this.name = "";
+               },
+               del(id){
+                   /*
+                   //方法1
+                   this.list.some((item,i)=>{
+                       if(item.id == id){
+                           //删除索引对应值
+                           this.list.splice(i,1);
+                           //在数组some方法中，如果return true,就会立刻中止循环
+                           return true;
+                       }
+                   })*/
+
+                   //方法2-专门查找索引
+                   var index = this.list.findIndex(item => {
+                       if(item.id == id){
+                           return true;
+                       }
+                   })
+                   this.list.splice(index,1);
+               },
+               search(keywords){
+                   /*
+                   //方法1
+                   var newlist = [];
+                   this.list.forEach(item => {
+                       //如果name包含了关键字
+                       if (item.name.indexOf(keywords) != -1){
+                            newlist.push(item);
+                       }
+                   });
+                   */
+                  //方法2
+                  return this.list.filter(item=>{
+                      //ES6中，为字符串提供了新方法：String.prototype.includes('要包含的字符串')
+                      //包含则返回true
+                    if(item.name.includes(keywords)){
+                        return item;
+                    }
+                  })
+                   
+
+               }
+           }
+        });
+
+        var vm2 = new Vue({
+            el:'#app2',
+            data:{
+                dt:new Date(),
+            },
+            methods:{},
+            
+            //定义私有过滤器
+            filters:{
+                //过滤器有两个条件：过滤器名称和处理函数
+                //过滤器调用时，采用就近原则，全局和私有重名时，优先调用私有过滤器
+                dateFormat:function(dateStr,pattern=''){
+                    //根据给定时间字符串，给出特定格式时间
+                    var dt = new Date(dateStr);
+
+                    //yyyy-mm-dd
+                    var y = dt.getFullYear();
+                    var m = dt.getMonth() + 1;
+                    var d = dt.getDate();
+                    //对字符串进行填充:padStart(maxlength,'') 在字符串头部填充，参数表示填充后的长度 以及用什么填充
+                    m = m.toString().padStart(2,'0');
+                    d = d.toString().padStart(2,'0');
+                    //传入格式转小写
+                    if(pattern.toLowerCase() == 'yyyy-mm-dd'){
+                        return `${y}-${m}-${d}`;
+                    }else{
+                        var hh = dt.getHours();
+                        var mm = dt.getMinutes();
+                        var ss = dt.getSeconds();
+                        hh = hh.toString().padStart(2,'0');
+                        mm = mm.toString().padStart(2,'0');
+                        ss = ss.toString().padStart(2,'0');
+
+                        return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+                    }
+
+                }
+
+            }
+        })
+    </script>
+</body>
+
+</html>

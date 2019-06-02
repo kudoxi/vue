@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+     <link  rel="stylesheet"  href="lib/bootstrap.min.css" />
+</head>
+
+<body>
+    <div id="app">
+        {{msg | msgFormat('受','狗') | test}}
+    </div>
+    <script>
+        //定义过滤器
+        //Vue.filter('过滤器的名称',function (param) {})
+        //param : 是过滤器管道符前面的参数，如：name
+        //调用时{{name | 过滤器的名称}}
+        Vue.filter('msgFormat',function(msg,arg,arg2){
+            //全局匹配/字符串/g
+            if (arg == ""){
+                arg = '粑粑';
+            }
+            return msg.replace(/屎/g,arg+arg2);
+        })
+        Vue.filter('test',function (msg) {
+            return msg+"==========";
+          })
+
+        var vm=new Vue({
+           el:'#app',
+           data:{
+               msg:"阿韩是狗屎，狗屎是阿韩"
+           },
+           methods:{}
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <input type="number" name="" id="" v-model="n1">
+
+        <select v-model='opt'>
+            <option value="+">+</option>
+            <option value="-">-</option>
+            <option value="*">*</option>
+            <option value="/">/</option>
+        </select>
+        <input type="number" name="" id="" v-model="n2">
+        
+        <button @click="caculate">计算</button>
+        <p>result:<span v-text="res"></span></p>
+    </div>
+    <script>
+        var vm=new Vue({
+           el:'#app',
+           data:{
+               n1:"0",
+               n2:"0",
+               opt:"+",
+               res:"0",
+           },
+           methods:{
+                caculate:function(){
+                    var n1 = Number(this.n1);
+                    var n2 = Number(this.n2);
+                    // if( this.opt == '+'){
+                    //     this.res = n1 + n2;
+                    // }else if(this.opt == '-'){
+                    //     this.res = n1 - n2;
+                    // }else if(this.opt == '*'){
+                    //     this.res = n1 * n2;
+                    // }else if(this.opt == '/'){
+                    //     this.res = n1 / n2;
+                    // }
+                    //投机取巧的方式，正式开发中少用
+                    var codestr = 'n1' + this.opt+ 'n2';
+                    this.res = eval(codestr);
+                }
+           }
+        });
+    </script>
+</body>
+
+</html>
