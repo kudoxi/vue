@@ -35,7 +35,7 @@
 
                     <label for="">
                             搜索关键字:
-                            <input type="text" class="form-control" v-model="keywords">
+                            <input type="text" class="form-control" v-model="keywords"  id="search" v-focus>
                     </label>
                     
               </div>
@@ -106,6 +106,27 @@
 
         //自定义全局按键修饰符
         Vue.config.keyCodes.f2 = 113;
+
+        //自定义全局指令
+        //其中，参数1：指令的名称，定义的时候指令名称前不需要加v-，调用时要加v-
+        //参数2：对象，上有指令相关钩子函数，在特定阶段可以执行相关函数
+        Vue.directive('focus',{
+            //注意，在每个函数中，第一个参数永远是el,指被绑定元素，是原生dom对象
+            bind:function(el){
+                //bind 第一次绑定到元素时调用
+                //刚绑定指令时，还没有插入到dom中去，这时候调用无效，因为一个元素只有在dom里才能被使用
+                //el.focus()
+
+            },
+            inserted:function(el){
+                //inserted 被绑定元素插入父节点时调用，父节点存在即可，不必存在于dom中[触发1次]
+                el.focus()
+
+            },
+            updated:function(){
+                //update 所在组件的Vnode更新时调用，但是可能发生在其孩子节点[触发多次]
+            }
+        })
 
 
         var vm=new Vue({
@@ -211,6 +232,8 @@
 
             }
         })
+
+        //document.getElementById("search").focus()
     </script>
 </body>
 
